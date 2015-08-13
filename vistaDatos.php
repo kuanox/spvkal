@@ -96,7 +96,7 @@
 	<p>Date: <input type="text" id="datepicker"></p>
 	<table id="idxtbl" class="tftable" align="center">
 		<tr>
-			<th id="val1_txt0"></th>
+			<th id="val1_txt0">1</th>
 			<td id="val1_txt1"></td>
 			<td id="val1_txt2"></td>
 
