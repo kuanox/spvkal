@@ -8,9 +8,20 @@
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
 	
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  	<link rel="stylesheet" href="/resources/demos/style.css">
+	
 </head>
 
 <body onload="LoadResetValor1()" link="#000000", vlink="#000000" alink="#000000">
+
+  <script>
+  $(function() {
+    $( "#datepicker" ).datepicker();
+  });
+  </script>
 
  	<style type="text/css">
 
@@ -82,6 +93,7 @@
 	     	<td align="center" ><img src="images/ImagenSPV.jpg" width="50%" height="50%"></td>
 		</tr>
 	</table>
+	<p>Date: <input type="text" id="datepicker"></p>
 	<table id="idxtbl" class="tftable" align="center">
 		<tr>
 			<th id="val1_txt0"></th>
