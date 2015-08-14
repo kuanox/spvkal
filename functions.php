@@ -8,7 +8,7 @@ function mysql_conexion()
 
 {
 	//$link= mysql_connect ("localhost", "root", "pgv") or die ('I
-	$link= mysql_connect ("localhost", "root", "") or die ('I 
+	$link= mysql_connect ("localhost", "root", "pgv") or die ('I 
 cannot connect to the database because: ' . mysql_error());
 
 	 mysql_select_db ("kalman") or die('spv no existe' .mysql_error()); 

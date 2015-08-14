@@ -12,16 +12,54 @@
   	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
   	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   	<link rel="stylesheet" href="/resources/demos/style.css">
+
+  	<!-- this should go after your </body> -->
+	<link rel="stylesheet" type="text/css" href="/jquery.datetimepicker.css"/ >
+	<script src="/jquery.js"></script>
+	<script src="/jquery.datetimepicker.js"></script>
 	
 </head>
 
 <body onload="LoadResetValor1()" link="#000000", vlink="#000000" alink="#000000">
 
-  <script>
-  $(function() {
-    $( "#datepicker" ).datepicker();
-  });
-  </script>
+	<script src="js/ajax.js"></script>
+
+  	<script>
+			$(function() {
+				$( "#datepicker1" ).datepicker({
+					dateFormat: "dd/mm/yy",
+			        firstDay: 1,
+			        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+			        dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+			        monthNames: 
+			            ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+			            "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+			        monthNamesShort: 
+			            ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+			            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+							});
+						});
+			$(function() {
+				$( "#datepicker2" ).datepicker({
+					dateFormat: "dd/mm/yy",
+			        firstDay: 1,
+			        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+			        dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+			        monthNames: 
+			            ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+			            "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+			        monthNamesShort: 
+			            ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+			            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+							});
+						});
+
+			function changeTest ( form ) { 
+					//form.echo.value = form.orig.value 
+					 LoadSetValoresGrafico(form.date1, form.date2);
+			} 
+
+  	</script>
 
  	<style type="text/css">
 
@@ -84,6 +122,18 @@
 		td {
 			font-size: 2vw;
 		}
+		p {
+			font-size: 2vw;
+		}
+		input {
+			font-size: 2vw;
+		}
+
+		.ui-widget {
+			font-size: 2vw;
+			font-style: italic;
+		}
+
 
 
 	</style>
@@ -93,7 +143,6 @@
 	     	<td align="center" ><img src="images/ImagenSPV.jpg" width="50%" height="50%"></td>
 		</tr>
 	</table>
-	<p>Date: <input type="text" id="datepicker"></p>
 	<table id="idxtbl" class="tftable" align="center">
 		<tr>
 			<th id="val1_txt0"></th>
@@ -112,6 +161,14 @@
 			<td id="val3_txt2"></td>
 		</tr>
 	</table>	
+	<table id="idxtbl" class="tftable" height="10%" align="center">
+		<form ... action="http://localhost/spvkal/vistaDatos.php" method="GET">
+			<tr>
+	 	     	<td align="left" ><p>Inicio: <input name"date1" type="text" id="datepicker1" class="medium" tabindex="4" size="10" value="" maxlength="10" readonly></p></td>
+		     	<td align="right"><p>Final:  <input onchange="changeTest(this.form)" name"date2" type="text" id="datepicker2" class="medium" tabindex="4" size="10" value="" maxlength="10" readonly></p></td>
+			</tr>
+		</form>
+	</table>
 	<div class="demo-container">
 			<div id="placeholder" aling='left' style="width:100%;height:150px;"></div>
 			<p id="choices" class="checkboxs" style="float:right; width:135px;"></p>
@@ -123,9 +180,6 @@
 		</tr>
 	</table>
 
-
-<script src="js/ajax.js">
-</script>
 
 
 </body>

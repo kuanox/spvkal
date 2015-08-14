@@ -1,16 +1,17 @@
 
-var datasetsAll 	= 	[];
-var datasetsOne 	= 	[];
-var alldata			=	[];
-var datosTotales	=	[];
-var subnames		=	[];
-var nombre			=   [];
-var valores 		= 	[];	
-
-var fechaHoraBuscar = 	0;
-var aux 			= 	0;
-var cantidadMostrar	=	0;
-var vienePrimeraVez = 	0;
+var datasetsAll 			= 	[];
+var datasetsOne 			= 	[];
+var alldata					=	[];
+var datosTotales			=	[];
+var subnames				=	[];
+var nombre					=   [];
+var valores 				= 	[];	
+var fechaHoraBuscar 		= 	0;
+var fechaHoraBuscarInicio 	= 	0;
+var fechaHoraBuscarFinal	=	0;
+var aux 					= 	0;
+var cantidadMostrar			=	0;
+var vienePrimeraVez 		= 	0;
 
 
 function objetoAjax(){
@@ -50,13 +51,14 @@ function LoadResetValor1()
 {
 	//console.log(limit);
 	
-	if (fechaHoraBuscar == 0) {
+	if (fechaHoraBuscarInicio == 0) {
 		vienePrimeraVez = 1;
 		//fechaHoraBuscar = limit;
 		today = new Date();
 		//var fechaactual = today.format("dd-mm-yyyy");
 		var fecha = new Date(Date.parse(today));
-		fechaHoraBuscar = formatDate(fecha);
+		fechaHoraBuscarInicio = formatDate(fecha);
+		fechaHoraBuscarFinal  = formatDate(fecha);
 	}else{
 		vienePrimeraVez = 2
 		var re = '/';
@@ -67,7 +69,8 @@ function LoadResetValor1()
 		mes  = fechaHoraBuscar.substring(3, 5);
 		ano  = fechaHoraBuscar.substring(6, 10);
 		horaMinSeg  = fechaHoraBuscar.substring(11, 20);
-		fechaHoraBuscar = ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
+		fechaHoraBuscarInicio = ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
+		fechaHoraBuscarFinal  = ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
 		aux = aux +1;
 	}
 
@@ -123,7 +126,7 @@ function LoadResetValor1()
 				divResultado23.innerHTML = valores[1][2];
 				//alert(respuesta);
 				if (vienePrimeraVez == 1) {
-					LoadSetValoresGrafico(fechaHoraBuscar);	
+					LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal);	
 				}else{
 					vienePrimeraVez = 2;
 					LoadSetUltimoValorGrafico(fechaHoraBuscar);
@@ -144,7 +147,7 @@ function LoadResetValor1()
 }
 
 
-function LoadSetValoresGrafico(fechaHoraBuscar){
+function LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal){
 
 	var index = 1;
 	var cantidad  = 3000;
@@ -196,7 +199,9 @@ function LoadSetValoresGrafico(fechaHoraBuscar){
 	ajaxMenu2.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 	//enviando los valores
 
-	ajaxMenu2.send("trig="+index+"&limit="+"'"+fechaHoraBuscar+"'"+"&cantidad="+cantidad);
+	console.log('fechaHoraBuscarInicio : ' + fechaHoraBuscarInicio);
+	console.log('fechaHoraBuscarFinal  : ' + fechaHoraBuscarFinal);
+	ajaxMenu2.send("trig="+index+"&limitIni="+"'"+fechaHoraBuscarInicio+"'"+"&limitFin="+"'"+fechaHoraBuscarFinal+"'");
 	// LLAMADA A LA BUSQUEDA DE ULTIMO DATO EN LAS TABLAS CORRECPOSNDIENTES
 	//LoadSetUltimoValorGrafico();
 
