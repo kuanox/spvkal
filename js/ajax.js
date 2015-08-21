@@ -5,13 +5,18 @@ var alldata					=	[];
 var datosTotales			=	[];
 var subnames				=	[];
 var nombre					=   [];
-var valores 				= 	[];	
+var valores 				= 	[];
+var data 					=	[];	
 var fechaHoraBuscar 		= 	0;
 var fechaHoraBuscarInicio 	= 	0;
 var fechaHoraBuscarFinal	=	0;
 var aux 					= 	0;
 var cantidadMostrar			=	0;
-var vienePrimeraVez 		= 	0;
+var vieneTablaOaGrafico 	= 	0;
+var datosGraficPrimeraVez 	= 	0;
+var valorMaximoGrafico 		= parseFloat("0");
+var valorMinimoGrafico 		= parseFloat("0");
+var valorAnteriorGrafico	= parseFloat("0");
 
 
 function objetoAjax(){
@@ -37,6 +42,16 @@ function objetoAjax(){
 	return xmlhttp;
 }
 
+//Formats d to MM/dd/yyyy HH:mm:ss format // MENOS UNA HORA - ESTO AL COMIENZO, PARA QUE GRAFIQUE UNA HORA
+function formatDateMenosUnaHora(d){
+  function addZero(n){
+     return n < 10 ? '0' + n : '' + n;
+  }
+
+    return d.getFullYear() + "-" + addZero(d.getMonth()+1)+"-"+ addZero(d.getDate())   + " " + 
+           addZero(d.getHours()-1) + ":" + addZero(d.getMinutes()-1) + ":" + addZero(d.getSeconds());
+}
+
 //Formats d to MM/dd/yyyy HH:mm:ss format
 function formatDate(d){
   function addZero(n){
@@ -49,29 +64,51 @@ function formatDate(d){
 
 function LoadResetValor1()
 {
+	var re;
+	var result;
 	//console.log(limit);
-	
 	if (fechaHoraBuscarInicio == 0) {
-		vienePrimeraVez = 1;
+
+		vieneTablaOaGrafico 		= 1;
 		//fechaHoraBuscar = limit;
-		today = new Date();
-		//var fechaactual = today.format("dd-mm-yyyy");
-		var fecha = new Date(Date.parse(today));
-		fechaHoraBuscarInicio = formatDate(fecha);
-		fechaHoraBuscarFinal  = formatDate(fecha);
+		today 						= new Date();
+		//var fechaactual 			= today.format("dd-mm-yyyy");
+		var fecha 					= new Date(Date.parse(today));
+		fechaHoraBuscarInicio 		= formatDateMenosUnaHora(fecha);
+		fechaHoraBuscarFinal  		= formatDate(fecha);
+
+		ano1  = fechaHoraBuscarInicio.substring(0, 4);
+		mes1  = fechaHoraBuscarInicio.substring(5, 7);
+		dia1  = fechaHoraBuscarInicio.substring(8, 10);
+		fecha1 = dia1 + "-" + mes1 + "-"+ ano1;
+		hora1 = fechaHoraBuscarInicio.substring(11, fechaHoraBuscarInicio.length);
+		document.formu.fecha1.value = fecha1 + " " + hora1;
+
+		ano2  = fechaHoraBuscarFinal.substring(0, 4);
+		mes2  = fechaHoraBuscarFinal.substring(5, 7);
+		dia2  = fechaHoraBuscarFinal.substring(8, 10);
+		fecha2 = dia2 + "-" + mes2 + "-"+ ano2;
+		hora2 = fechaHoraBuscarFinal.substring(11, fechaHoraBuscarFinal.length);
+		document.formu.fecha2.value = fecha2 + " " + hora2;
+		//fechaHoraBuscarInicio 	= '2015-07-24 17:00:06';
+		//fechaHoraBuscarFinal 	= '2015-07-24 17:00:06'
 	}else{
-		vienePrimeraVez = 2
-		var re = '/';
-		var result = valores[0][2].replace(re, "-");
-		fechaHoraBuscar = result;
-		fechaHoraBuscar = fechaHoraBuscar.replace(re, "-");
-		dia  = fechaHoraBuscar.substring(0, 2);
-		mes  = fechaHoraBuscar.substring(3, 5);
-		ano  = fechaHoraBuscar.substring(6, 10);
-		horaMinSeg  = fechaHoraBuscar.substring(11, 20);
-		fechaHoraBuscarInicio = ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
-		fechaHoraBuscarFinal  = ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
-		aux = aux +1;
+		vieneTablaOaGrafico = 2
+		//console.log('ENTRA A fechaHoraBuscarInicio distinto de  0');
+		/*
+		re 						= '/';
+		result 					= valores[0][2].replace(re, "-");
+		fechaHoraBuscar 		= result;
+		fechaHoraBuscar 		= fechaHoraBuscar.replace(re, "-");
+		dia 					= fechaHoraBuscar.substring(0, 2);
+		mes  					= fechaHoraBuscar.substring(3, 5);
+		ano  					= fechaHoraBuscar.substring(6, 10);
+		horaMinSeg  			= fechaHoraBuscar.substring(11, 20);
+
+		fechaHoraBuscarInicio 	= ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
+		fechaHoraBuscarFinal  	= ano + "-" + mes + "-"+ dia + " " + horaMinSeg;
+		*/
+		aux 					= aux +1;
 	}
 
 	divResultado11 = document.getElementById('val1_txt0');
@@ -125,32 +162,33 @@ function LoadResetValor1()
 				divResultado22.innerHTML = valores[1][1];
 				divResultado23.innerHTML = valores[1][2];
 				//alert(respuesta);
-				if (vienePrimeraVez == 1) {
-					LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal);	
+				
+				if (vieneTablaOaGrafico == 1) {
+					LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal, 1);	
 				}else{
-					vienePrimeraVez = 2;
-					LoadSetUltimoValorGrafico(fechaHoraBuscar);
+					vieneTablaOaGrafico = 2;
+					//LoadSetUltimoValorGrafico(fechaHoraBuscar);
+					LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal, 1);
 				}
-			}else{
-				//fechaHoraBuscar = 0;
 			}
 		}
 	}
 	ajaxMenu.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 	//enviando los valores
-			
-	//ajaxMenu.send("trig="+1);	
-	ajaxMenu.send("trig="+1+"&limit="+"'"+fechaHoraBuscar+"'");
 
-	
+	//console.log('ENTRA CON fechaHoraBuscarFinal :' + fechaHoraBuscarFinal);
+	//console.log(fechaHoraBuscarFinal);
+	ajaxMenu.send("trig="+1+"&limit="+"'"+fechaHoraBuscarFinal+"'");	
 	
 }
 
 
-function LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal){
+function LoadSetValoresGrafico(fechaHoraBuscarInicioVista, fechaHoraBuscarFinalVista, flag){
 
-	var index = 1;
-	var cantidad  = 3000;
+	var index 					= 1;
+	var cantidad  				= 3000;	
+	var primeraFechaIngresada 	= 0;
+	var ultimaFechaIngresada 	= 0;
 	ajaxMenu2=objetoAjax(); 
 	ajaxMenu2.open("POST", "setMode2.php", true);
 	ajaxMenu2.onreadystatechange=function() {
@@ -168,7 +206,10 @@ function LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal){
 				}
 				temp = new Array();
 				datos = new Array();
-				datosTotales = new Array(datos);
+				datosTotales = new Array(datos);				
+
+				valorMinimoGrafico = 0;
+				valorMaximoGrafico = 0;
 
 				for (z=0; z<alldata.length; z++){
 					
@@ -179,35 +220,82 @@ function LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal){
 						hora = temp[0].substring(11, 13);
 						min  = temp[0].substring(14, 16);
 						seg  = temp[0].substring(17, 19);
-						horamin = dia + hora + min //+ ":" + seg;
+						horamin = dia + hora + min;// + seg;
+						if (primeraFechaIngresada == 0)
+							primeraFechaIngresada = temp[0];
+						ultimaFechaIngresada = temp[0];
 						alldata[z][1][i] = new Array((horamin),parseFloat(temp[1]));
+						//console.log('horamin : ' + temp[0] + ' temp[1] : ' + temp[1]);
+						if (valorMaximoGrafico == 0){valorMaximoGrafico = temp[1]}
+						if (valorMinimoGrafico == 0){valorMinimoGrafico = temp[1]}
+						if (valorMaximoGrafico < temp[1]){
+							valorMaximoGrafico =  temp[1];
+						}
+						if (valorMinimoGrafico > temp[1]){
+							valorMinimoGrafico =  temp[1];
+						}
 					}
 
 				}
+
+				/*
+				console.log('valorMinimoGrafico');
+				valorMinimoGrafico = parseInt(valorMinimoGrafico) + 100;
+				console.log(valorMinimoGrafico);
+				console.log('valorMaximoGrafico');
+				valorMaximoGrafico = parseInt(valorMaximoGrafico) + 100;
+				console.log(valorMaximoGrafico);
+				*/
+				
+
+				datasetsAll = [];
 				datasetsAll = {	[ alldata[0][0] ]:{ label: alldata[0][0] , data: alldata[0][1]},
 								[ alldata[1][0] ]:{ label: alldata[1][0] , data: alldata[1][1]},
 								[ alldata[2][0] ]:{ label: alldata[2][0] , data: alldata[2][1]}
 					  		  };
 
+				if (flag == 1){ // viene de LoadResetValor1
+					//console.log('------1------ ENTRA A CAMBIAR LOS DATOS ------1-----');
+					fechaHoraBuscarInicio = primeraFechaIngresada;
+					fechaHoraBuscarFinal  = ultimaFechaIngresada;
+
+					ano1  = primeraFechaIngresada.substring(0, 4);
+					mes1  = primeraFechaIngresada.substring(5, 7);
+					dia1  = primeraFechaIngresada.substring(8, 10);
+					fecha1 = dia1 + "-" + mes1 + "-"+ ano1;
+					hora1 = primeraFechaIngresada.substring(11, primeraFechaIngresada.length);
+					document.formu.fecha1.value = fecha1 + " " + hora1;
+
+					ano2  = ultimaFechaIngresada.substring(0, 4);
+					mes2  = ultimaFechaIngresada.substring(5, 7);
+					dia2  = ultimaFechaIngresada.substring(8, 10);
+					fecha2 = dia2 + "-" + mes2 + "-"+ ano2;
+					hora2 = ultimaFechaIngresada.substring(11, ultimaFechaIngresada.length);
+					document.formu.fecha2.value = fecha2 + " " + hora2;
+				}
+
 				//console.log('datasetsAll 0 :' + datasetsAll);
-				//console.log(datasetsAll);
+				//console.log(datasetsAll);ultimaFechaIngresada
 				//alert('datasetsAll')
-				graficarDatos();
+				//graficarDatos();
+				updateGraphic();
 			}
 		}
 	}
 	ajaxMenu2.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 	//enviando los valores
+	
+	fechaHoraBuscarInicio 	= fechaHoraBuscarInicioVista;
+	fechaHoraBuscarFinal 	= fechaHoraBuscarFinalVista;
 
-	console.log('fechaHoraBuscarInicio : ' + fechaHoraBuscarInicio);
-	console.log('fechaHoraBuscarFinal  : ' + fechaHoraBuscarFinal);
 	ajaxMenu2.send("trig="+index+"&limitIni="+"'"+fechaHoraBuscarInicio+"'"+"&limitFin="+"'"+fechaHoraBuscarFinal+"'");
 	// LLAMADA A LA BUSQUEDA DE ULTIMO DATO EN LAS TABLAS CORRECPOSNDIENTES
 	//LoadSetUltimoValorGrafico();
 
 }
 
-var datoBuscar = '';
+// NO SE ESTA USANDO ACTUALMENTE
+/*
 function LoadSetUltimoValorGrafico(fechaHoraBuscar){
 
 	var index 	= 2;
@@ -253,7 +341,7 @@ function LoadSetUltimoValorGrafico(fechaHoraBuscar){
 				//console.log('datasetsAll 3:' + datasetsAll);
 				//console.log(datasetsAll);
 				//alert('datasetsAll')
-				updateGraphic();
+				//updateGraphic();
 				//alert("respuesta 3");
 			}
 		}
@@ -273,6 +361,7 @@ function LoadSetUltimoValorGrafico(fechaHoraBuscar){
 	ajaxMenu3.send("trig="+index+"&limit='"+fechaHoraBuscar+"'"+"&cantidad="+1);
 
 }
+*/
 
 function LoadResetV()
 {
@@ -521,43 +610,8 @@ function procRMen(men)
 
 /***********************************************************/
 
-	
-var data = [];
 
 function graficarDatos(){
-	
-		/*
-		var datasets = {
-			"usa": {
-				label: "USA",
-				data: [[1988, 483994], [1989, 479060], [1990, 457648], [1991, 401949], [1992, 424705], [1993, 402375], [1994, 377867], [1995, 357382], [1996, 337946], [1997, 336185], [1998, 328611], [1999, 329421], [2000, 342172], [2001, 344932], [2002, 387303], [2003, 440813], [2004, 480451], [2005, 504638], [2006, 528692]]
-			},        
-			"russia": {
-				label: "Russia",
-				data: [[1988, 218000], [1989, 203000], [1990, 171000], [1992, 42500], [1993, 37600], [1994, 36600], [1995, 21700], [1996, 19200], [1997, 21300], [1998, 13600], [1999, 14000], [2000, 19100], [2001, 21300], [2002, 23600], [2003, 25100], [2004, 26100], [2005, 31100], [2006, 34700]]
-			},
-			"uk": {
-				label: "UK",
-				data: [[1988, 62982], [1989, 62027], [1990, 60696], [1991, 62348], [1992, 58560], [1993, 56393], [1994, 54579], [1995, 50818], [1996, 50554], [1997, 48276], [1998, 47691], [1999, 47529], [2000, 47778], [2001, 48760], [2002, 50949], [2003, 57452], [2004, 60234], [2005, 60076], [2006, 59213]]
-			}
-		};
-		*/
-		/*
-		var datasetsAll = {
-			"usa": {
-				label: "Nivel",
-				data: [['10', 65], ['11', 64], ['12', 65], ['13', 64], ['14', 66], ['15', 67], ['16', 63], ['17', 68], ['18', 65], ['19', 67], ['20', 63], ['21', 65], ['22', 68], ['23', 62], ['24', 65], ['25', 68], ['26', 63], ['27', 64], ['28', 61]]
-			},        
-			"russia": {
-				label: "Flijo",
-				data: [['10', 35], ['11', 36], ['12', 33], ['13', 37], ['14', 37], ['15', 32], ['16', 33], ['17', 34], ['18', 34], ['19', 35], ['20', 34], ['21', 31], ['22', 30], ['23', 37], ['24', 39], ['25', 32], ['26', 34], ['27', 35], ['28', 35]]
-			},
-			"uk": {
-				label: "Kalman",
-				data: [['10', 50], ['11', 51], ['12', 51], ['13', 50], ['14', 52], ['15', 51], ['16', 53], ['17', 52], ['18', 51], ['19', 50], ['20', 52], ['21', 52], ['22', 53], ['23', 50], ['24', 51], ['25', 50], ['26', 51], ['27', 52], ['28', 50]]
-			}
-		};
-		*/
 
 		// hard-code color indices to prevent them from shifting as
 		// countries are turned on/off
@@ -577,10 +631,6 @@ function graficarDatos(){
 
 		});
 
-		//choiceContainer.find("input").click(plotAccordingToChoices);
-		
-		//var data = [];
-
 		function plotAccordingToChoices() {
 
 			//var data = [];
@@ -591,7 +641,6 @@ function graficarDatos(){
 					data.push(datasetsAll[key]);
 				}
 			});
-
 					
 			if (data.length > 0) {
 				//console.log("data > " + data);
@@ -602,8 +651,8 @@ function graficarDatos(){
 						shadowSize: 0	// Drawing is faster without shadows
 					},
 					yaxis: {
-						min: 600,
-						max: 1100
+						min: 700,
+						max: 800
 					},
 					xaxis: {
 						show: true
@@ -612,42 +661,53 @@ function graficarDatos(){
 			}
 			
 		}
-		/*
-		var plot = $.plot("#placeholder", [ getRandomData() ], {
-			series: {
-				shadowSize: 0	// Drawing is faster without shadows
-			},
-			yaxis: {
-				min: 0,
-				max: 100
-			},
-			xaxis: {
-				show: false
-			}
-		});
-		*/
 
 		plotAccordingToChoices();
 }
 
+var choiceContainer = $("#choices");
+
 function updateGraphic() {
 
-			//var data = [];
+			data = [];
+			var i = 0;
+				$.each(datasetsAll, function(key, val) {
+					val.color = i+2;
+					++i;
+			});
 
-			//if (cantidadMostrar < 3){
+			//console.log('vieneTablaOaGrafico : ' + vieneTablaOaGrafico);
+			if (datosGraficPrimeraVez == 0){
+				$.each(datasetsAll, function(key, val) {
+				choiceContainer.append("<br/><input class='checkboxs' type='checkbox' name='" + key  +
+					"' checked='checked' id='id" + key + "'>");
+				});
+				datosGraficPrimeraVez = 1;
+			}
 
-				//console.log('cantidadMostrar :' + cantidadMostrar);
+			choiceContainer.find("input:checked").each(function () {
+				var key = $(this).attr("name");
+				//console.log('key  22222 : ' + key);
+				if (key && datasetsAll[key]) {
+					//console.log('data 22222');
+					//console.log(data);
+					//alert('data 2222');
+					data.push(datasetsAll[key]);
+				}
+			});
 
-				//console.log('data : ' + data);
-				//console.log(data);
+			console.log('valorMinimoGrafico');
+			console.log(valorMinimoGrafico);
+			console.log('valorMaximoGrafico');
+			console.log(valorMaximoGrafico);
 
-				var plot = $.plot("#placeholder", data, {
+			var plot = $.plot("#placeholder", data, {
 					series: {
 						shadowSize: 2	// Drawing is faster without shadows
 					},
 					yaxis: {
-						min: 600,
-						max: 1100
+						min: 700,
+						max: 800
 					},					
 					grid: {
 						hoverable: true,
@@ -655,19 +715,12 @@ function updateGraphic() {
 					},
 					xaxis: {
 						show: true,
-						tickDecimals: 2
+						tickDecimals: 0
 					}
 
 				});
 
-				plot.setData(data);
-
-				// Since the axes don't change, we don't need to call plot.setupGrid()
-
-				//plot.draw();
-
-				cantidadMostrar++;
-			//}
+			plot.setData(data);
 			
 		}
 //LoadSetValoresGrafico();

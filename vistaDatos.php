@@ -7,59 +7,14 @@
 	
 	<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
-	
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  	<link rel="stylesheet" href="/resources/demos/style.css">
 
-  	<!-- this should go after your </body> -->
-	<link rel="stylesheet" type="text/css" href="/jquery.datetimepicker.css"/ >
-	<script src="/jquery.js"></script>
-	<script src="/jquery.datetimepicker.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="src/DateTimePicker.css" />
+	<script type="text/javascript" src="src/DateTimePicker.js"></script>
 	
 </head>
 
 <body onload="LoadResetValor1()" link="#000000", vlink="#000000" alink="#000000">
-
-	<script src="js/ajax.js"></script>
-
-  	<script>
-			$(function() {
-				$( "#datepicker1" ).datepicker({
-					dateFormat: "dd/mm/yy",
-			        firstDay: 1,
-			        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-			        dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
-			        monthNames: 
-			            ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
-			            "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-			        monthNamesShort: 
-			            ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
-			            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-							});
-						});
-			$(function() {
-				$( "#datepicker2" ).datepicker({
-					dateFormat: "dd/mm/yy",
-			        firstDay: 1,
-			        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-			        dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
-			        monthNames: 
-			            ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
-			            "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-			        monthNamesShort: 
-			            ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
-			            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-							});
-						});
-
-			function changeTest ( form ) { 
-					//form.echo.value = form.orig.value 
-					 LoadSetValoresGrafico(form.date1, form.date2);
-			} 
-
-  	</script>
 
  	<style type="text/css">
 
@@ -67,10 +22,10 @@
 		    background-color: #FFFFFF;
 		} 
 
-		.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}
-		.tftable th {font-size:3vw;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}
+		.tftable {font-size:12vm;color:#333333;width:100%;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}
+		.tftable th {font-size:2vw;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}
 		.tftable tr {background-color:#d4e3e5;}
-		.tftable td {font-size:3vw;border-width: 1px;padding: 2px;border-style: solid;border-color: #729ea5;}
+		.tftable td {font-size:2vw;border-width: 1px;padding: 2px;border-style: solid;border-color: #729ea5;}
 		.tftable tr:hover {background-color:#ffffff;}
 
 		.myButton {
@@ -92,7 +47,7 @@
 			cursor:pointer;
 			color:#ffffff;
 			font-family:Arial;
-			font-size:20px;
+			font-size:2vm;
 			font-weight:bold;
 			padding:13px 32px;
 			text-decoration:none;
@@ -116,34 +71,59 @@
         	display:none;
         }
 
+        img {
+			font-size: 2vw;
+		}
+        p {
+			font-size: 2vw;
+		}
+        tr {
+			font-size: 2vw;
+		}
 		th {
 			font-size: 2vw;
 		}
 		td {
 			font-size: 2vw;
 		}
-		p {
-			font-size: 2vw;
-		}
 		input {
 			font-size: 2vw;
 		}
 
-		.ui-widget {
-			font-size: 2vw;
-			font-style: italic;
-		}
-
-
-
 	</style>
 
-	<table id="idxtbl" class="tftable" align="center">
+	<script>
+
+		function changeTest ( form ) { 
+				var fechaBuacar1 = document.formu.fecha1.value;
+   				var fechaBuacar2 = document.formu.fecha2.value;
+				// 24-07-2015 18:00
+				
+				var dia1					= fechaBuacar1.substring(0, 2);
+				var mes1  					= fechaBuacar1.substring(3, 5);
+				var ano1  					= fechaBuacar1.substring(6, 10);
+				var horaMinSeg1  			= fechaBuacar1.substring(11, 20);
+				var dia2					= fechaBuacar2.substring(0, 2);
+				var mes2  					= fechaBuacar2.substring(3, 5);
+				var ano2  					= fechaBuacar2.substring(6, 10);
+				var horaMinSeg2  			= fechaBuacar2.substring(11, 20);
+				var fechaHoraBuscarInicio 	= ano1 + "-" + mes1 + "-"+ dia1 + " " + horaMinSeg1;
+				var fechaHoraBuscarFinal  	= ano2 + "-" + mes2 + "-"+ dia2 + " " + horaMinSeg2;
+
+				if (fechaBuacar1 != '' && fechaBuacar2 != ''){
+					var flag 				= 0;
+					LoadSetValoresGrafico(fechaHoraBuscarInicio, fechaHoraBuscarFinal, flag);
+				}
+		} 
+
+  	</script>
+
+	<table id="idxtbl1" class="tftable" align="center">
 		<tr>
 	     	<td align="center" ><img src="images/ImagenSPV.jpg" width="50%" height="50%"></td>
 		</tr>
 	</table>
-	<table id="idxtbl" class="tftable" align="center">
+	<table id="idxtbl2" class="tftable" align="center">
 		<tr>
 			<th id="val1_txt0"></th>
 			<td id="val1_txt1"></td>
@@ -161,25 +141,43 @@
 			<td id="val3_txt2"></td>
 		</tr>
 	</table>	
-	<table id="idxtbl" class="tftable" height="10%" align="center">
-		<form ... action="http://localhost/spvkal/vistaDatos.php" method="GET">
+
+	<div id="dtBox"></div>	
+	
+	<script type="text/javascript">
+	
+		$(document).ready(function()
+		{
+			$("#dtBox").DateTimePicker(
+			{
+				dateFormat: "dd/MMM/yyyy"
+			});
+		});
+	
+	</script>
+
+	<table id="idxtbl3" class="tftable" height="10%" align="center">
+		<form method="GET" name="formu" id="formu" >
 			<tr>
-	 	     	<td align="left" ><p>Inicio: <input name"date1" type="text" id="datepicker1" class="medium" tabindex="4" size="10" value="" maxlength="10" readonly></p></td>
-		     	<td align="right"><p>Final:  <input onchange="changeTest(this.form)" name"date2" type="text" id="datepicker2" class="medium" tabindex="4" size="10" value="" maxlength="10" readonly></p></td>
+	 	     	<td align="left" ><p>Inicio: <input name="fecha1" id="fecha1" onchange="changeTest(this.form)" type="text" data-field="datetime" readonly></p></td>
+		     	<td align="right"><p>Final: <input name="fecha2" id="fecha2" onchange="changeTest(this.form)" type="text" data-field="datetime" readonly></p></td>
 			</tr>
 		</form>
 	</table>
 	<div class="demo-container">
-			<div id="placeholder" aling='left' style="width:100%;height:150px;"></div>
-			<p id="choices" class="checkboxs" style="float:right; width:135px;"></p>
-		</div>
-	<table id="idxtbl" class="tftable" height="10%" align="center">
+		<div id="placeholder" aling='left' style="font-size:2vw;width:100%;height:150px;"></div>
+		<p id="choices" class="checkboxs" style="float:right; width:135px;"></p>
+	</div>
+	<table id="idxtbl4" class="tftable" height="10%" align="center">
 		<tr>
  	     	<td align="center" ><a href="#" class="myButton">Info</a></td>
 	     	<td align="center" ><a href="#" class="myButton">Salir</a></td>
 		</tr>
 	</table>
 
+
+<script src="js/ajax.js">
+</script>
 
 
 </body>

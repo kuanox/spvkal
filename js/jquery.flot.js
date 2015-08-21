@@ -515,7 +515,7 @@ Licensed under the MIT license.
             options = {
                 // the color theme used for graphs
                 colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
-                legend: {
+                legend: { // LEYENDA DE COLORES DE LAS LINEAS
                     show: true,
                     noColumns: 1, // number of colums in legend table
                     labelFormatter: null, // fn: string -> string
@@ -596,7 +596,7 @@ Licensed under the MIT license.
                     borderColor: null, // set if different from the grid color
                     tickColor: null, // color for the ticks, e.g. "rgba(0,0,0,0.15)"
                     margin: 0, // distance from the canvas edge to the grid
-                    labelMargin: 5, // in pixels
+                    labelMargin: 10, // in pixels
                     axisMargin: 8, // in pixels
                     borderWidth: 2, // in pixels
                     minBorderMargin: null, // in pixels, null means taken from points radius
@@ -1625,9 +1625,34 @@ Licensed under the MIT license.
                     allocateAxisBoxSecondPhase(axis);
                 });
             }
+            // AQUI ANCHO DE GRID GRAFICO            
+            //plotWidth = ((surface.width - plotOffset.left - plotOffset.right) - 280); // ESTO DA - 1001            
+            var valorOriginalWidth 	= (surface.width - plotOffset.left - plotOffset.right);
+            var valorOriginalHeight	= (surface.height - plotOffset.bottom - plotOffset.top);
+            //var anchoEnPorcent = (valorOriginalWidth / (100 * 1001));
+			//var anchoEnNum =  (anchoEnPorcent * (surface.width - plotOffset.left - plotOffset.right) ) / 100;
 
-            plotWidth = surface.width - plotOffset.left - plotOffset.right;
-            plotHeight = surface.height - plotOffset.bottom - plotOffset.top;
+			//plotWidth = surface.width - plotOffset.left - plotOffset.right;
+			var porcent = 22;
+			if (valorOriginalWidth < 1000 && valorOriginalWidth >= 900){porcent = 23} 
+			if (valorOriginalWidth < 900 && valorOriginalWidth >= 800){porcent = 24}
+			if (valorOriginalWidth < 800 && valorOriginalWidth >= 700){porcent = 25}
+			if (valorOriginalWidth < 700 && valorOriginalWidth >= 600){porcent = 26}
+			if (valorOriginalWidth < 600 && valorOriginalWidth >= 500){porcent = 28}
+			if (valorOriginalWidth < 500 && valorOriginalWidth >= 400){porcent = 30}
+			if (valorOriginalWidth < 400 && valorOriginalWidth >= 300){porcent = 32}
+			if (valorOriginalWidth < 300 && valorOriginalWidth >= 200){porcent = 34}
+			if (valorOriginalWidth < 200 && valorOriginalWidth >= 100){porcent = 36}
+			if (valorOriginalWidth < 100 && valorOriginalWidth >= 0){porcent = 38}
+
+			//console.log('porcent');
+			//console.log(porcent);
+			// LARGO GRAFICO
+            var restarWidth	= (valorOriginalWidth * porcent) / 100;
+            plotWidth		= valorOriginalWidth - restarWidth;
+            plotHeight		= surface.height - plotOffset.bottom - plotOffset.top;   
+            //var restarHeight	= (valorOriginalHeight * 22) / 100;
+			//plotHeight			= valorOriginalHeight - restarHeight;
 
             // now we got the proper plot dimensions, we can compute the scaling
             $.each(axes, function (_, axis) {
@@ -2781,7 +2806,7 @@ Licensed under the MIT license.
             if (fragments.length == 0)
                 return;
 
-            var table = '<table style="font-size:smaller;color:' + options.grid.color + ';margin-left:25px;">' + fragments.join("") + '</table>';
+            var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
             if (options.legend.container != null)
                 $(options.legend.container).html(table);
             else {
@@ -2800,7 +2825,8 @@ Licensed under the MIT license.
                     pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
                 // style="position:absolute;
                 // margin-left:25px; margin-top:10px
-                var legend = $('<div class="legend">' + table.replace('style="', 'style="margin-left:25px;' + pos +';') + '</div>').appendTo(placeholder);
+                //var legend = $('<div class="legend">' + table.replace('style="', 'style="margin-left:25px;' + pos +';') + '</div>').appendTo(placeholder);
+                var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
                 if (options.legend.backgroundOpacity != 0.0) {
                     // put in the transparent background
                     // separately to avoid blended labels and
